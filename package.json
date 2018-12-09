@@ -1,7 +1,7 @@
 {
   "name": "line-sticker-downloader",
   "description": "Tool that downloads stickers or emojis from the LINE store",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "Suchipi <me@suchipi.com>",
   "repository": "suchipi/line-sticker-downloader",
   "license": "MIT",
