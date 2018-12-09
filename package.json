@@ -1,0 +1,36 @@
+{
+  "name": "line-sticker-downloader",
+  "version": "1.0.0",
+  "author": "Suchipi <me@suchipi.com>",
+  "repository": "suchipi/line-sticker-downloader",
+  "license": "MIT",
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "README.md",
+    "package.json",
+    "LICENSE"
+  ],
+  "keywords": [
+    "line",
+    "sticker",
+    "emoji",
+    "download",
+    "script",
+    "batch",
+    "save"
+  ],
+  "dependencies": {
+    "chalk": "2.4.1",
+    "image-downloader": "3.4.2",
+    "make-dir": "1.3.0",
+    "ora": "3.0.0",
+    "puppeteer": "1.11.0"
+  },
+  "devDependencies": {
+    "eslint": "^5.10.0",
+    "eslint-config-unobtrusive": "^1.2.2",
+    "eslint-plugin-import": "^2.14.0",
+    "prettier": "^1.15.3"
+  }
+}

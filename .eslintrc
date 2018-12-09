@@ -1,0 +1,12 @@
+{
+  "extends": ["unobtrusive", "unobtrusive/import"],
+  "env": {
+    "node": true,
+    "es6": true,
+    "mocha": true
+  },
+  "globals": {
+    "cy": false,
+    "Cypress": false
+  }
+}
