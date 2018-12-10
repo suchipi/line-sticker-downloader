@@ -22,8 +22,13 @@ npx line-sticker-downloader https://store.line.me/emojishop/product/5bfcd255040a
 ## Notes/troubleshooting
 
 - If you don't specify a folder, it will use `stickers` by default.
-- The script clicks on each sticker and then waits a bit to see if there's an animated version, and if there is, it downloads the animated version. If it's failing to download animated versions, you can increase the amount of time it waits by setting the `ANIMATED_WAIT_DELAY` environment variable. The default value is 400 (for 400 ms).
-- If you don't care about checking for animated versions, you can set `ANIMATED_WAIT_DELAY` to 0 to speed up the download.
+- The script clicks on each sticker and then waits a bit to see if there's an animated version, and if there is, it downloads the animated version. If it's failing to download animated versions, you can increase the amount of time it waits by using the `--animated-wait-delay` flag:
+
+  ```
+  npx line-sticker-downloader --animated-wait-delay 1000 https://store.line.me/stickershop/product/1565020/en gojill-animated
+  ```
+
+- If you don't care about checking for animated versions, you can set `--animated-wait-delay` to 0 to speed up the download.
 
 ## License
 

@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 const path = require("path");
 const chalk = require("chalk");
 const puppeteer = require("puppeteer");
@@ -8,9 +6,22 @@ const downloadImage = require("image-downloader").image;
 const ora = require("ora");
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const spinner = ora("Downloading stickers...").start();
+function createContext(config) {
+  const { url, dest = "stickers", animatedWaitDelay } = config;
 
-async function scrapeStickerUrls(pageUrl) {
+  return {
+    spinner: ora("Downloading stickers..."),
+    config: {
+      url,
+      dest,
+      animatedWaitDelay,
+    },
+  };
+}
+
+async function scrapeStickerUrls(context) {
+  const { url: pageUrl, animatedWaitDelay } = context.config;
+
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   await page.goto(pageUrl);
@@ -25,10 +36,10 @@ async function scrapeStickerUrls(pageUrl) {
   const total = elementHandles.length;
   for (const elementHandle of elementHandles) {
     index++;
-    spinner.text = `Downloading stickers (${index}/${total})...`;
+    context.spinner.text = `Scraping stickers (${index}/${total})...`;
 
     await elementHandle.click();
-    await sleep(process.env.ANIMATED_WAIT_DELAY || 400);
+    await sleep(animatedWaitDelay);
     const canvasHandles = await page.$$("canvas[data-apng-src]");
 
     let url;
@@ -53,29 +64,37 @@ async function scrapeStickerUrls(pageUrl) {
   return stickerUrls;
 }
 
-async function main() {
+async function downloadStickers(config = {}) {
+  let context;
   try {
-    const url = process.argv[2];
-    const dest = process.argv[3] || "stickers";
+    context = createContext(config);
+    const {
+      spinner,
+      config: { dest },
+    } = context;
+    spinner.start();
 
-    const urls = await scrapeStickerUrls(url);
+    const urls = await scrapeStickerUrls(context);
     await makeDir(dest);
 
+    context.spinner.text = `Downloading ${urls.length} stickers...`;
     await Promise.all(
       urls.map((url, i) =>
         downloadImage({
           url,
-          dest: path.join(dest, `sticker-${i}.png`),
+          dest: path.join(dest, `sticker-${i + 1}.png`),
         })
       )
     );
 
     spinner.succeed(chalk.green(`Saved stickers to ${dest}/`));
   } catch (err) {
-    spinner.fail(chalk.red(err.message));
+    if (context) {
+      context.spinner.fail(chalk.red(err.message));
+    }
     console.error(err.stack);
     process.exit(1);
   }
 }
 
-main();
+module.exports = downloadStickers;
