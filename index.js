@@ -4,10 +4,11 @@ const puppeteer = require("puppeteer");
 const makeDir = require("make-dir");
 const downloadImage = require("image-downloader").image;
 const ora = require("ora");
+const apng2gif = require("apng2gif");
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function createContext(config) {
-  const { url, dest = "stickers", animatedWaitDelay } = config;
+  const { url, dest = "stickers", animatedWaitDelay, convertToGif } = config;
 
   return {
     spinner: ora("Downloading stickers..."),
@@ -15,6 +16,7 @@ function createContext(config) {
       url,
       dest,
       animatedWaitDelay,
+      convertToGif,
     },
   };
 }
@@ -70,7 +72,7 @@ async function downloadStickers(config = {}) {
     context = createContext(config);
     const {
       spinner,
-      config: { dest },
+      config: { dest, convertToGif },
     } = context;
     spinner.start();
 
@@ -86,6 +88,13 @@ async function downloadStickers(config = {}) {
         })
       )
     );
+
+    if (convertToGif) {
+      context.spinner.text = `Converting ${urls.length} stickers to GIF...`;
+      await Promise.all(
+        urls.map((url, i) => apng2gif(path.join(dest, `sticker-${i + 1}.png`)))
+      );
+    }
 
     spinner.succeed(chalk.green(`Saved stickers to ${dest}/`));
   } catch (err) {
