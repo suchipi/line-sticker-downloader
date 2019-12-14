@@ -2,6 +2,8 @@
 
 Tool that downloads stickers or emojis from the LINE store.
 
+[Demo site](https://goonlinetools.com/line-sticker-download/)
+
 ## Requirements
 
 Node 8 or higher
