@@ -29,7 +29,7 @@ async function scrapeStickerUrls(context) {
   await page.goto(pageUrl);
   const stickerUrls = [];
 
-  const elementHandles = await page.$$('ul > li [style^="background-image"]');
+  const elementHandles = await page.$$('ul > li > div.FnImage [style^="background-image"]');
   if (elementHandles.length === 0) {
     throw new Error("Could not find any stickers on the specified page");
   }
