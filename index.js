@@ -76,7 +76,9 @@ async function downloadStickers(config = {}) {
     } = context;
     spinner.start();
 
-    const urls = await scrapeStickerUrls(context);
+    let urls = await scrapeStickerUrls(context);
+    urls = Array.from(new Set(urls));
+
     await makeDir(dest);
 
     context.spinner.text = `Downloading ${urls.length} stickers...`;
