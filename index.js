@@ -1,7 +1,7 @@
+const fs = require("fs");
 const path = require("path");
-const chalk = require("chalk");
+const kleur = require("kleur");
 const puppeteer = require("puppeteer");
-const makeDir = require("make-dir");
 const downloadImage = require("image-downloader").image;
 const ora = require("ora");
 const apng2gif = require("apng2gif");
@@ -14,7 +14,7 @@ function createContext(config) {
     spinner: ora("Downloading stickers..."),
     config: {
       url,
-      dest,
+      dest: path.isAbsolute(dest) ? dest : path.resolve(process.cwd(), dest),
       animatedWaitDelay,
       convertToGif,
     },
@@ -24,8 +24,10 @@ function createContext(config) {
 async function scrapeStickerUrls(context) {
   const { url: pageUrl, animatedWaitDelay } = context.config;
 
+  context.spinner.text = `Opening automated web browser...`;
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
+  context.spinner.text = `Loading ${JSON.stringify(pageUrl)}...`;
   await page.goto(pageUrl);
   const stickerUrls = [];
 
@@ -79,7 +81,7 @@ async function downloadStickers(config = {}) {
     let urls = await scrapeStickerUrls(context);
     urls = Array.from(new Set(urls));
 
-    await makeDir(dest);
+    await fs.promises.mkdir(dest, { recursive: true });
 
     context.spinner.text = `Downloading ${urls.length} stickers...`;
     await Promise.all(
@@ -98,10 +100,10 @@ async function downloadStickers(config = {}) {
       );
     }
 
-    spinner.succeed(chalk.green(`Saved stickers to ${dest}/`));
+    spinner.succeed(kleur.green(`Saved stickers to ${dest}/`));
   } catch (err) {
     if (context) {
-      context.spinner.fail(chalk.red(err.message));
+      context.spinner.fail(kleur.red(err.message));
     }
     console.error(err.stack);
     process.exit(1);
