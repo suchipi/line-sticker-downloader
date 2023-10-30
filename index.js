@@ -1,11 +1,11 @@
 const fs = require("fs");
 const path = require("path");
 const kleur = require("kleur");
-const puppeteer = require("puppeteer");
+const playwright = require("playwright");
 const downloadImage = require("image-downloader").image;
 const ora = require("ora");
 const apng2gif = require("apng2gif");
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const sleep = require("a-mimir").sleep.async;
 
 function createContext(config) {
   const { url, dest = "stickers", animatedWaitDelay, convertToGif } = config;
@@ -25,7 +25,7 @@ async function scrapeStickerUrls(context) {
   const { url: pageUrl, animatedWaitDelay } = context.config;
 
   context.spinner.text = `Opening automated web browser...`;
-  const browser = await puppeteer.launch();
+  const browser = await playwright.chromium.launch();
   const page = await browser.newPage();
   context.spinner.text = `Loading ${JSON.stringify(pageUrl)}...`;
   await page.goto(pageUrl);
@@ -51,13 +51,13 @@ async function scrapeStickerUrls(context) {
       // First canvas is the product image; skip it
       url = await await page.evaluate(
         (el) => el.getAttribute("data-apng-src"),
-        canvasHandles[1]
+        canvasHandles[1],
       );
     } else {
       // Treat as non-animated sticker
       url = await page.evaluate(
         (el) => el.style.backgroundImage.replace(/^url\("|"\)/g, ""),
-        elementHandle
+        elementHandle,
       );
     }
     stickerUrls.push(url);
@@ -89,14 +89,14 @@ async function downloadStickers(config = {}) {
         downloadImage({
           url,
           dest: path.join(dest, `sticker-${i + 1}.png`),
-        })
-      )
+        }),
+      ),
     );
 
     if (convertToGif) {
       context.spinner.text = `Converting ${urls.length} stickers to GIF...`;
       await Promise.all(
-        urls.map((url, i) => apng2gif(path.join(dest, `sticker-${i + 1}.png`)))
+        urls.map((url, i) => apng2gif(path.join(dest, `sticker-${i + 1}.png`))),
       );
     }
 

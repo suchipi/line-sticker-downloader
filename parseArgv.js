@@ -1,8 +1,8 @@
-const chalk = require("chalk");
+const kleur = require("kleur");
 
 const argv = require("yargs")
   .usage("$0 [options] <URL> [folder]")
-  .demand(1, chalk.red("Error: Please specify a URL"))
+  .demand(1, kleur.red("Error: Please specify a URL"))
   .option("animated-wait-delay", {
     default: 400,
     describe:
