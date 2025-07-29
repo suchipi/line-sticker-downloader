@@ -9,14 +9,14 @@ Node 8 or higher
 ## Usage
 
 1. Find something you want from http://store.line.me
-2. Copy the URL to the item (eg `https://store.line.me/emojishop/product/5bfcd255040ab139c41b2d0e/en`)
+2. Copy the URL to the item (eg `https://store.line.me/stickershop/product/29280929/en`)
 3. Run `npx line-sticker-downloader <URL> [folder]`, replacing `<URL>` with your URL and `[folder]` with a folder to save them to
 4. It will download all the stickers/emoji from that page and save them to the folder.
 
 Example:
 
 ```
-npx line-sticker-downloader https://store.line.me/emojishop/product/5bfcd255040ab139c41b2d0e/en menhera-emoji-cat
+npx line-sticker-downloader https://store.line.me/stickershop/product/29280929/en menhera-emoji-cat
 ```
 
 ## Notes/troubleshooting
