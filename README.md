@@ -4,7 +4,7 @@ Tool that downloads stickers or emojis from the LINE store.
 
 ## Requirements
 
-Node 8 or higher
+[Node.js](https://nodejs.org/en) 8 or higher
 
 ## Usage
 
